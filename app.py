@@ -1,10 +1,11 @@
 import os
 import re
-import openai
+# import openai
 import shutil
+import whisper
 import datetime
 # from dotenv import load_dotenv
-# from transcript import speech2Text
+from transcript import speech2Text
 # from counter import generateResponse
 # from text2speech import synthesize_speech
 from flask import Flask,request, jsonify, render_template
@@ -19,9 +20,10 @@ def filename():
 
 
 app= Flask(__name__)
-app.config["UPLOAD_FOLDER"] ="./Data/"
-# app.config["INPUT_AUDIO"] = ".\\recordings\\Input\\Input Audio\\"
-# app.config['INPUT_AUDIO_TRANSCRIPTION'] = ".\\recordings\\Input\\Transcription\\"
+app.config["UPLOAD_AUDIO_FOLDER"] ="./Data/Input/Input Audio/"
+app.config["UPLOAD_PDF_FOLDER"] ="./Data/Input/Input Pdf/"
+app.config["INPUT_AUDIO_FOLDER"] = ".\\Data\\Input\\Input Audio\\"
+app.config['TRANSCRIPTED_AUDIO_FOLDER'] = ".\\Data\\Output\\Audio Transcript\\"
 # app.config["GPT_RESPONSE"] ='.\\recordings\\Output\\GPT Response\\'
 # app.config["OUTPUT_AUDIO"] = '.\\recordings\\Output\\Output Audio\\'
 # app.config['STATIC_PATH']= '.\\static\\'
@@ -38,15 +40,17 @@ def result():
             # input_audio_file = 'recorded_audio.wav'
             # os.remove(os.path.join(os.path.join(app.config['INPUT_AUDIO'],input_audio_file)))
             file = request.files['data']
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"] , 'recorded_audio.wav')
+            filepath = os.path.join(app.config["UPLOAD_AUDIO_FOLDER"] , 'recorded_audio.wav')
+            speech2Text(app.config["INPUT_AUDIO_FOLDER"] , app.config['TRANSCRIPTED_AUDIO_FOLDER'])
             file.save(filepath)
-            return jsonify("Input Audio is stored")
+
+            return jsonify("Input Audio is stored"),200
 
         if 'pdfFile' in request.files:
             file = request.files['pdfFile']
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"] , 'downloaded_pdf.pdf')
+            filepath = os.path.join(app.config["UPLOAD_PDF_FOLDER"], 'downloaded_pdf.pdf')
             file.save(filepath)
-            return jsonify("File uploaded successfully!")
+            return jsonify("File uploaded successfully!"),200
 
             # transcripted_text = 'input_audio_transcription.txt'
             # # os.remove(os.path.join(app.config['INPUT_AUDIO_TRANSCRIPTION'],transcripted_text))
@@ -72,5 +76,5 @@ def result():
 #         synthesize_speech(app.config["GPT_RESPONSE"],app.config["OUTPUT_AUDIO"])
 #         return jsonify(response_text)
 
-# if __name__ == "__main__":
-#     app.run(debug=False)
+if __name__ == "__main__":
+    app.run(debug=False)
