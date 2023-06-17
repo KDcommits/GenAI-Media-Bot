@@ -1,11 +1,12 @@
 import os
 import re
+import json 
 # import openai
-import shutil
-import whisper
+# import shutil
 import datetime
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from transcript import speech2Text
+from data import Data
 # from counter import generateResponse
 # from text2speech import synthesize_speech
 from flask import Flask,request, jsonify, render_template
@@ -23,6 +24,7 @@ app= Flask(__name__)
 app.config["UPLOAD_AUDIO_FOLDER"] ="./Data/Input/Input Audio/"
 app.config["UPLOAD_PDF_FOLDER"] ="./Data/Input/Input Pdf/"
 app.config["INPUT_AUDIO_FOLDER"] = ".\\Data\\Input\\Input Audio\\"
+app.config["INPUT_PDF_FOLDER"] = ".\\Data\\Input\\Input Pdf\\"
 app.config['TRANSCRIPTED_AUDIO_FOLDER'] = ".\\Data\\Output\\Audio Transcript\\"
 # app.config["GPT_RESPONSE"] ='.\\recordings\\Output\\GPT Response\\'
 # app.config["OUTPUT_AUDIO"] = '.\\recordings\\Output\\Output Audio\\'
@@ -41,22 +43,29 @@ def result():
             # os.remove(os.path.join(os.path.join(app.config['INPUT_AUDIO'],input_audio_file)))
             file = request.files['data']
             filepath = os.path.join(app.config["UPLOAD_AUDIO_FOLDER"] , 'recorded_audio.wav')
-            speech2Text(app.config["INPUT_AUDIO_FOLDER"] , app.config['TRANSCRIPTED_AUDIO_FOLDER'])
             file.save(filepath)
+            speech2Text(app.config["INPUT_AUDIO_FOLDER"] , app.config['TRANSCRIPTED_AUDIO_FOLDER'])
 
             return jsonify("Input Audio is stored"),200
+        
 
         if 'pdfFile' in request.files:
+            pdf_filename = 'downloaded_pdf.pdf'
             file = request.files['pdfFile']
-            filepath = os.path.join(app.config["UPLOAD_PDF_FOLDER"], 'downloaded_pdf.pdf')
+            filepath = os.path.join(app.config["UPLOAD_PDF_FOLDER"], pdf_filename)
             file.save(filepath)
-            return jsonify("File uploaded successfully!"),200
+            _chunkifyPdfFile(app.config["INPUT_PDF_FOLDER"], pdf_filename)
+
+            return jsonify({"status": 201, 'message':'success'})
 
             # transcripted_text = 'input_audio_transcription.txt'
             # # os.remove(os.path.join(app.config['INPUT_AUDIO_TRANSCRIPTION'],transcripted_text))
             # response_text = generateResponse(app.config['INPUT_AUDIO_TRANSCRIPTION'], app.config["GPT_RESPONSE"] )
 
             # return jsonify(response_text)
+        else:
+            error = 'Some Error Occured!'
+            return jsonify({'error': error})
             
         
 
@@ -75,6 +84,14 @@ def result():
 #         response_text = generateResponse(app.config['INPUT_AUDIO_TRANSCRIPTION'], app.config["GPT_RESPONSE"] )
 #         synthesize_speech(app.config["GPT_RESPONSE"],app.config["OUTPUT_AUDIO"])
 #         return jsonify(response_text)
+
+
+def _chunkifyPdfFile(filepath, filename):
+    pdf_path = os.path.join(filepath,filename)
+    chunks = Data(pdf_path).text_to_chunk()
+    with open(os.path.join(filepath,'chunks.json'),'w') as f:
+        json.dump(chunks, f)
+    f.close()
 
 if __name__ == "__main__":
     app.run(debug=False)
