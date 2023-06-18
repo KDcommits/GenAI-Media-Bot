@@ -1,19 +1,17 @@
 import os
 import re
 import json 
-# import openai
-# import shutil
+import openai
+import shutil
 import datetime
 from dotenv import load_dotenv
 from transcript import speech2Text
 from data import Data
-# from counter import generateResponse
-# from text2speech import synthesize_speech
+from model import Model
 from flask import Flask,request, jsonify, render_template
 
-# load_dotenv()
-
-# openai.api_key = os.getenv('OPENAI_KEY')
+load_dotenv()
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def filename():
     now = str(datetime.datetime.now())
@@ -38,6 +36,7 @@ def audioTranscripter():
 @app.route('/result', methods=['GET','POST'])
 def result():
     if request.method == "POST":
+        print(request.files)
         if 'data' in request.files:
             # input_audio_file = 'recorded_audio.wav'
             # os.remove(os.path.join(os.path.join(app.config['INPUT_AUDIO'],input_audio_file)))
@@ -46,7 +45,7 @@ def result():
             file.save(filepath)
             speech2Text(app.config["INPUT_AUDIO_FOLDER"] , app.config['TRANSCRIPTED_AUDIO_FOLDER'])
 
-            return jsonify("Input Audio is stored"),200
+            return jsonify("Input Audio is stored")
         
 
         if 'pdfFile' in request.files:
@@ -56,7 +55,7 @@ def result():
             file.save(filepath)
             _chunkifyPdfFile(app.config["INPUT_PDF_FOLDER"], pdf_filename)
 
-            return jsonify({"status": 201, 'message':'success'})
+            return jsonify("Input PDF is stored")
 
             # transcripted_text = 'input_audio_transcription.txt'
             # # os.remove(os.path.join(app.config['INPUT_AUDIO_TRANSCRIPTION'],transcripted_text))
@@ -66,8 +65,33 @@ def result():
         else:
             error = 'Some Error Occured!'
             return jsonify({'error': error})
-            
         
+@app.route('/text-question', methods=['GET','POST'])
+def fetchTextQuestion():
+    input_text = request.json['text']
+    print(input_text)
+    with open(os.path.join(app.config["INPUT_PDF_FOLDER"], 'chunks.json'), 'r') as f_read:
+        chunk_data = json.load(f_read)
+    f_read.close()
+    # print(chunk_data[0])
+    OPENAI_KEY = os.getenv("OPENAI_KEY")
+    print("OpenAI is Generating Response!")
+    pdf_bot = Model(OPENAI_KEY, 
+                      chunk_data, 
+                      input_text) 
+    print("\n OpenAI Generating results ... \n")
+    response = pdf_bot.generateAnswer() 
+    print("\n results generated \n")
+    return jsonify(response)
+    # return jsonify({'response': response})
+    # return jsonify(f"Chunk data Length : {len(chunk_data)}")
+    # return jsonify({"status": 200, 'message':'success'})
+
+
+
+# @app.route('/audio-question', methods=['GET','POST'])
+# def fetchAudioQuestion():
+
 
 # @app.route('/display', methods=['GET','POST'])
 # def displayText():
