@@ -11,6 +11,8 @@ from model import Model
 from flask import Flask,request, jsonify, render_template
 
 load_dotenv()
+OPENAI_KEY = os.getenv("OPENAI_KEY")
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def filename():
@@ -69,13 +71,10 @@ def result():
 @app.route('/text-question', methods=['GET','POST'])
 def fetchTextQuestion():
     input_text = request.json['text']
-    print(input_text)
     with open(os.path.join(app.config["INPUT_PDF_FOLDER"], 'chunks.json'), 'r') as f_read:
         chunk_data = json.load(f_read)
     f_read.close()
-    # print(chunk_data[0])
-    OPENAI_KEY = os.getenv("OPENAI_KEY")
-    print("OpenAI is Generating Response!")
+
     pdf_bot = Model(OPENAI_KEY, 
                       chunk_data, 
                       input_text) 
@@ -89,8 +88,28 @@ def fetchTextQuestion():
 
 
 
-# @app.route('/audio-question', methods=['GET','POST'])
-# def fetchAudioQuestion():
+@app.route('/audio-question', methods=['GET','POST'])
+def fetchAudioQuestion():
+    transcripted_audio_file = 'input_audio_transcription.txt'
+
+    with open(os.path.join(app.config["INPUT_PDF_FOLDER"], 'chunks.json'), 'r') as f_read:
+        chunk_data = json.load(f_read)
+    f_read.close()
+    
+    with open(os.path.join(app.config['TRANSCRIPTED_AUDIO_FOLDER'], transcripted_audio_file)) as f_audio:
+        input_text = "".join(f_audio)
+    f_audio.close()
+
+    print("Transcripted Input Audio : ", input_text) 
+
+    pdf_bot = Model(OPENAI_KEY, 
+                      chunk_data, 
+                      input_text) 
+    print("\n OpenAI Generating results ... \n")
+    response = pdf_bot.generateAnswer() 
+    print("\n results generated \n")
+    return jsonify(response)
+
 
 
 # @app.route('/display', methods=['GET','POST'])
