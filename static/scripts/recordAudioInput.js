@@ -52,19 +52,37 @@ function stopRecording() {
     audioElement.controls = true;
     document.getElementById('chatWindow').appendChild(audioElement);
     document.getElementById('audioMessage').innerHTML = '';
+
     // Optionally, you can send the audioBlob to your chatbot backend for processing
     // In this example, we'll simulate a response from the bot
-    stimulateBotAudioResponse();
+    displayResponse();
   });
 
   recordedChunks.length = 0;
 }
 
 
-function stimulateBotAudioResponse(){
+function stimulateBotAudioResponse(responseData){
   const botMessage = document.createElement('div');
   botMessage.className = 'botMessage';
-  botMessage.innerText ="OpenAI Response";
+  botMessage.innerText = responseData;
   return document.getElementById('chatWindow').appendChild(botMessage);
+}
 
+function displayResponse() {
+  fetch('/audio-question', {
+    method: 'POST',
+    body: JSON.stringify(),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(responseData => {
+    console.log("Response from backend:", responseData);
+    stimulateBotAudioResponse(responseData);
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
 }
