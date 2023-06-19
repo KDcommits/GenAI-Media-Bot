@@ -5,12 +5,15 @@ let isRecording = false;
 
 // Function to toggle recording audio
 function toggleRecording() {
+  var recordButton = document.getElementById('audioRecordButton');
   if (isRecording) {
     stopRecording();
     isRecording = false;
+    recordButton.style.backgroundColor = '#86ce89'; //green
   } else {
     startRecording();
     isRecording = true;
+    recordButton.style.backgroundColor = '#e24d42'; //red
   }
 }
 

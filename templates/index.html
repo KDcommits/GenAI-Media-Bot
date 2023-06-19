@@ -3,24 +3,33 @@
   <head>
     <title>Chatbot with Audio Input</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="static/css/styles.css">
+    <style>
+      body {
+      background-image: url('./static/BG_IMG_2.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      }
+    </style>
   </head>
   <body>
     <div class="chatbot">
-    <h2 >Chatbot</h2>
+    <!-- <div class="nameWindow"> -->
+    <h2 align="center">PDF Assistant</h2>
+  <!-- </div> -->
     <div id="chatWindow"></div>
-    <div class="shadow p-3 mb-5 bg-white rounded">
+    <!-- <div class="shadow p-3 mb-5 bg-white rounded"> -->
     <!-- <input type="file" id="pdfFile" class="file-input" accept=".pdf"> -->
     <input type="file" id="audioInput"  name="pdfFile" accept="audio/*,application/pdf" />
-    <div id="audioMessage"></div>
-    <div>
-    <button onclick="uploadFile()" class="pdfUploadButton"><i class="fas fa-paperclip"></i></button>
+    <div class="audio-container" id="audioMessage"></div>
+    <div id="buttonWindow">
+    <button onclick="uploadFile()" id="uploadPDF" class="pdfUploadButton"><i class="fas fa-paperclip"></i></button>
     <input type="text" id="textInput" onkeydown="handleKeyPress(event)" placeholder="Type your message..." />
-    <button onclick="sendMessage()" class="sendTextButton"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-    <button onclick="toggleRecording()" class="startStopButton" ><i class="fa fa-microphone" aria-hidden="true"></i></button>
+    <button onclick="sendMessage()" id="sendText" class="sendTextButton"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+    <button onclick="toggleRecording()" id="audioRecordButton" class="startStopButton" ><i class="fa fa-microphone" aria-hidden="true"></i></button>
     </div>
-  </div>
+  <!-- </div> -->
   </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
