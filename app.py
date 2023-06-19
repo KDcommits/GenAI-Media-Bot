@@ -75,13 +75,13 @@ def fetchTextQuestion():
         chunk_data = json.load(f_read)
     f_read.close()
 
-    pdf_bot = Model(OPENAI_KEY, 
-                      chunk_data, 
-                      input_text) 
-    print("\n OpenAI Generating results ... \n")
-    response = pdf_bot.generateAnswer() 
-    print("\n results generated \n")
-    return jsonify(response)
+    # pdf_bot = Model(OPENAI_KEY, 
+    #                   chunk_data, 
+    #                   input_text) 
+    # print("\n OpenAI Generating results ... \n")
+    # response = pdf_bot.generateAnswer() 
+    # print("\n results generated \n")
+    return jsonify("HI from KD")
     # return jsonify({'response': response})
     # return jsonify(f"Chunk data Length : {len(chunk_data)}")
     # return jsonify({"status": 200, 'message':'success'})
@@ -102,13 +102,13 @@ def fetchAudioQuestion():
 
     print("Transcripted Input Audio : ", input_text) 
 
-    pdf_bot = Model(OPENAI_KEY, 
-                      chunk_data, 
-                      input_text) 
-    print("\n OpenAI Generating results ... \n")
-    response = pdf_bot.generateAnswer() 
-    print("\n results generated \n")
-    return jsonify(response)
+    # pdf_bot = Model(OPENAI_KEY, 
+    #                   chunk_data, 
+    #                   input_text) 
+    # print("\n OpenAI Generating results ... \n")
+    # response = pdf_bot.generateAnswer() 
+    # print("\n results generated \n")
+    return jsonify("HI from KD")
 
 
 
