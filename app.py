@@ -109,13 +109,13 @@ def fetchTextQuestion():
         # return jsonify({"status": 200, 'message':'success'})
 
     if latest_file.count('.xlsx') == 1:
-        stored_excel_filename = 'downloaded_excel.xlsx'
-        excel_filepath = os.path.join(input_file_path, stored_excel_filename)
-        query_result = ExcelQuery(OPENAI_KEY).excelQuery(latest_file,input_text)
-        return jsonify(query_result)
+        # stored_excel_filename = 'downloaded_excel.xlsx'
+        # excel_filepath = os.path.join(input_file_path, stored_excel_filename)
+        # query_result = ExcelQuery(OPENAI_KEY).excelQuery(latest_file,input_text)
+        # return jsonify(query_result)
 
         
-        # return jsonify("HI from KD, Excel " + latest_file)
+        return jsonify("HI from KD, Excel " + latest_file)
 
 
 
