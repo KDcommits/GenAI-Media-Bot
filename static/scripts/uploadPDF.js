@@ -33,11 +33,14 @@ function handleFileUpload(event) {
         reader.onload = function () {
         const pdfUrl = reader.result;
         const linkElement = document.createElement('a');
-        linkElement.href = pdfUrl;
-        linkElement.textContent = 'Uploaded PDF';
-        linkElement.innerHTML = "<p style='text-align:right;'>" + "PDF"+ "</p>";
+        const pdfImage =  document.createElement('img');
+        // linkElement.textContent = 'Uploaded PDF';
+        // linkElement.innerHTML = "<p style='text-align:right;'>" + "PDF"+ "</p>";
         linkElement.target = '_blank';
-        document.getElementById('chatWindow').appendChild(linkElement);
+        pdfImage.src = "./static/pdf_image.png"
+        pdfImage.style =  "width: 60px; height: 70px; margin-left:275px";
+        linkElement.href = pdfUrl;
+        document.getElementById('chatWindow').appendChild(linkElement).appendChild(pdfImage);
         document.getElementById('audioMessage').innerHTML = '';
         stimulateBotPDFResponse();
         };
@@ -63,6 +66,47 @@ function handleFileUpload(event) {
         // reader.readAsArrayBuffer(pdf_file);
         
     }
+    else if(file && file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+        console.log(file.type);
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const htmlTable = XLSX.utils.sheet_to_html(worksheet);
+
+        const linkElement = document.createElement('a');
+        const excelImage =  document.createElement('img');
+        linkElement.innerHTML = htmlTable
+        linkElement.href = URL.createObjectURL(file);
+        // linkElement.textContent = 'Excel Uploaded';
+        // linkElement.innerHTML = "<p style='text-align:right;'>" + "Excel"+ "</p>";
+        linkElement.target = '_blank';
+        excelImage.src = "./static/excel_image.png"
+        excelImage.style = "width: 160px; height: 80px; margin-left:222.5px";
+        document.getElementById('chatWindow').appendChild(linkElement).appendChild(excelImage);
+        document.getElementById('audioMessage').innerHTML = '';
+        stimulateBotPDFResponse();
+        };
+
+        const excelReader = new FileReader();
+        excelReader.onload = function () {
+          const arrayBuffer = excelReader.result;
+          const blob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          let formData = new FormData();
+          formData.append('excelFile', blob, "data.xlsx");
+          $.ajax({
+            type: 'POST',
+            url: '/result',
+            data: formData,
+            contentType: false,
+            processData: false
+          });
+        };
+        excelReader.readAsArrayBuffer(file);
+        reader.readAsDataURL(file);
+    }
+
     }
 
 function stimulateBotPDFResponse(){

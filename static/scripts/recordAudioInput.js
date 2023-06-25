@@ -51,6 +51,7 @@ function stopRecording() {
     });
     // Create an audio element and append it to the chat window
     const audioElement = document.createElement('audio');
+    audioElement.className = 'userAudioMessage';
     audioElement.src = audioUrl;
     audioElement.controls = true;
     document.getElementById('chatWindow').appendChild(audioElement);
