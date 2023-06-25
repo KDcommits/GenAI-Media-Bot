@@ -1,19 +1,23 @@
 import os
 import re
 import json 
+import glob
 import openai
 import shutil
 import datetime
+import pandas as pd
 from dotenv import load_dotenv
 from transcript import speech2Text
 from data import Data
 from model import Model
+from excelAI import ExcelQuery
 from flask import Flask,request, jsonify, render_template
 
 load_dotenv()
+os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_KEY')
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 OPENAI_KEY = os.getenv("OPENAI_KEY")
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def filename():
     now = str(datetime.datetime.now())
@@ -22,9 +26,11 @@ def filename():
 
 app= Flask(__name__)
 app.config["UPLOAD_AUDIO_FOLDER"] ="./Data/Input/Input Audio/"
-app.config["UPLOAD_PDF_FOLDER"] ="./Data/Input/Input Pdf/"
+app.config["UPLOAD_PDF_FOLDER"] ="./Data/Input/Input File/"
+app.config["UPLOAD_EXCEL_FOLDER"] ="./Data/Input/Input File/"
 app.config["INPUT_AUDIO_FOLDER"] = ".\\Data\\Input\\Input Audio\\"
-app.config["INPUT_PDF_FOLDER"] = ".\\Data\\Input\\Input Pdf\\"
+app.config["INPUT_PDF_FOLDER"] = ".\\Data\\Input\\Input File\\"
+app.config["INPUT_CHUNKS_FOLDER"] = ".\\Data\\Input\\Input Chunks\\"
 app.config['TRANSCRIPTED_AUDIO_FOLDER'] = ".\\Data\\Output\\Audio Transcript\\"
 # app.config["GPT_RESPONSE"] ='.\\recordings\\Output\\GPT Response\\'
 # app.config["OUTPUT_AUDIO"] = '.\\recordings\\Output\\Output Audio\\'
@@ -55,7 +61,7 @@ def result():
             file = request.files['pdfFile']
             filepath = os.path.join(app.config["UPLOAD_PDF_FOLDER"], pdf_filename)
             file.save(filepath)
-            _chunkifyPdfFile(app.config["INPUT_PDF_FOLDER"], pdf_filename)
+            _chunkifyPdfFile(app.config["INPUT_PDF_FOLDER"] , app.config["INPUT_CHUNKS_FOLDER"], pdf_filename)
 
             return jsonify("Input PDF is stored")
 
@@ -64,27 +70,53 @@ def result():
             # response_text = generateResponse(app.config['INPUT_AUDIO_TRANSCRIPTION'], app.config["GPT_RESPONSE"] )
 
             # return jsonify(response_text)
+        if 'excelFile' in request.files:
+            excel_filename = 'downloaded_excel.xlsx'
+            file = request.files['excelFile']
+            filepath = os.path.join(app.config["UPLOAD_EXCEL_FOLDER"], excel_filename)
+            file.save(filepath)
+
+            return jsonify("Input Excel is stored")
+
+
+
         else:
             error = 'Some Error Occured!'
             return jsonify({'error': error})
         
 @app.route('/text-question', methods=['GET','POST'])
 def fetchTextQuestion():
-    input_text = request.json['text']
-    with open(os.path.join(app.config["INPUT_PDF_FOLDER"], 'chunks.json'), 'r') as f_read:
-        chunk_data = json.load(f_read)
-    f_read.close()
+    input_text = request.json['text'].strip()
+    input_file_path = app.config["INPUT_PDF_FOLDER"]
+    files_dir = os.path.join(input_file_path,'*')
+    latest_file = sorted(glob.iglob(files_dir), key=os.path.getmtime, reverse=True)[0]
+    print(latest_file)
 
-    # pdf_bot = Model(OPENAI_KEY, 
-    #                   chunk_data, 
-    #                   input_text) 
-    # print("\n OpenAI Generating results ... \n")
-    # response = pdf_bot.generateAnswer() 
-    # print("\n results generated \n")
-    return jsonify("HI from KD")
-    # return jsonify({'response': response})
-    # return jsonify(f"Chunk data Length : {len(chunk_data)}")
-    # return jsonify({"status": 200, 'message':'success'})
+    if latest_file.count('.pdf') ==1:
+        with open(os.path.join(app.config["INPUT_CHUNKS_FOLDER"], 'chunks.json'), 'r') as f_read:
+            chunk_data = json.load(f_read)
+        f_read.close()
+
+        # pdf_bot = Model(OPENAI_KEY, 
+        #                   chunk_data, 
+        #                   input_text) 
+        # print("\n OpenAI Generating results ... \n")
+        # response = pdf_bot.generateAnswer() 
+        # print("\n results generated \n")
+        return jsonify("HI from KD, Pdf "+ latest_file)
+        # return jsonify({'response': response})
+        # return jsonify(f"Chunk data Length : {len(chunk_data)}")
+        # return jsonify({"status": 200, 'message':'success'})
+
+    if latest_file.count('.xlsx') == 1:
+        stored_excel_filename = 'downloaded_excel.xlsx'
+        excel_filepath = os.path.join(input_file_path, stored_excel_filename)
+        query_result = ExcelQuery(OPENAI_KEY).excelQuery(latest_file,input_text)
+        return jsonify(query_result)
+
+        
+        # return jsonify("HI from KD, Excel " + latest_file)
+
 
 
 
@@ -129,12 +161,14 @@ def fetchAudioQuestion():
 #         return jsonify(response_text)
 
 
-def _chunkifyPdfFile(filepath, filename):
-    pdf_path = os.path.join(filepath,filename)
+def _chunkifyPdfFile(pdf_filepath,chunk_filepath, filename):
+    pdf_path = os.path.join(pdf_filepath,filename)
     chunks = Data(pdf_path).text_to_chunk()
-    with open(os.path.join(filepath,'chunks.json'),'w') as f:
+    with open(os.path.join(chunk_filepath,'chunks.json'),'w') as f:
         json.dump(chunks, f)
     f.close()
+
+
 
 if __name__ == "__main__":
     app.run(debug=False)
