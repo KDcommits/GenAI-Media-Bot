@@ -42,6 +42,7 @@ function createUserMessage(message) {
   }
 
 function simulateBotTextResponse(openai_response){
+    console.log(typeof(openai_response))
     const botMessage = document.createElement('div');
     botMessage.className = 'botMessage';
     botMessage.innerHTML ="<p>" + openai_response + "</p>";

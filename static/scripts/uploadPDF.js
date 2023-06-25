@@ -37,8 +37,9 @@ function handleFileUpload(event) {
         // linkElement.textContent = 'Uploaded PDF';
         // linkElement.innerHTML = "<p style='text-align:right;'>" + "PDF"+ "</p>";
         linkElement.target = '_blank';
-        pdfImage.src = "./static/pdf_image.png"
-        pdfImage.style =  "width: 60px; height: 70px; margin-left:275px";
+        pdfImage.src = "./static/pdf_image.png";
+        pdfImage.className = 'pdfImage';
+        // pdfImage.style =  "width: 60px; height: 70px; margin-left:275px";
         linkElement.href = pdfUrl;
         document.getElementById('chatWindow').appendChild(linkElement).appendChild(pdfImage);
         document.getElementById('audioMessage').innerHTML = '';
@@ -83,7 +84,8 @@ function handleFileUpload(event) {
         // linkElement.innerHTML = "<p style='text-align:right;'>" + "Excel"+ "</p>";
         linkElement.target = '_blank';
         excelImage.src = "./static/excel_image.png"
-        excelImage.style = "width: 160px; height: 80px; margin-left:222.5px";
+        // excelImage.style = "width: 160px; height: 80px; margin-left:222.5px";
+        excelImage.className ='excelImage'
         document.getElementById('chatWindow').appendChild(linkElement).appendChild(excelImage);
         document.getElementById('audioMessage').innerHTML = '';
         stimulateBotPDFResponse();
@@ -112,7 +114,7 @@ function handleFileUpload(event) {
 function stimulateBotPDFResponse(){
     const botMessage = document.createElement('div');
     botMessage.className = 'botMessage';
-    botMessage.innerText ="OpenAI Response";
+    botMessage.innerText ="Success!!! \nYour File is uploaded.\nYou can now ask relevant question \
+                           associated to the uploaded file.";
     return document.getElementById('chatWindow').appendChild(botMessage);
-
-}
+} 
