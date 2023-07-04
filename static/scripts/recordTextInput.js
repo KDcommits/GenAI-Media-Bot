@@ -2,7 +2,9 @@
 function sendMessage() {
     const userInput = document.getElementById('textInput').value.trim();
     const userMessage = createUserMessage(userInput);
-    document.getElementById('chatWindow').appendChild(userMessage);
+    const chatWindow = document.getElementById('chatWindow')
+    chatWindow.appendChild(userMessage);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
     document.getElementById('textInput').value = '';
     if (userInput !== '') {
         fetch('/text-question', {
@@ -17,7 +19,9 @@ function sendMessage() {
 
         // Optionally, you can send the user's text message to your chatbot backend for processing
         // In this example, we'll simulate a response from the bot
-        simulateBotTextResponse(responseData);
+        var botResponse = simulateBotTextResponse(responseData);
+        chatWindow.appendChild(botResponse);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     })
     .catch(error => {
         console.error("Error:", error);
@@ -46,7 +50,9 @@ function simulateBotTextResponse(openai_response){
     const botMessage = document.createElement('div');
     botMessage.className = 'botMessage';
     botMessage.innerHTML ="<p>" + openai_response + "</p>";
-    return document.getElementById('chatWindow').appendChild(botMessage);
+    // const chatWindow = document.getElementById('chatWindow');
+    // return chatWindow.appendChild(botMessage);
+    return botMessage;
 
     }
 

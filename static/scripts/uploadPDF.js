@@ -28,6 +28,7 @@ function uploadFile() {
 // Function to handle file upload
 function handleFileUpload(event) {
     const file = event.target.files[0];
+    const chatwindow = document.getElementById('chatWindow');
     if (file && file.type === 'application/pdf') {
         const reader = new FileReader();
         reader.onload = function () {
@@ -41,9 +42,12 @@ function handleFileUpload(event) {
         pdfImage.className = 'pdfImage';
         // pdfImage.style =  "width: 60px; height: 70px; margin-left:275px";
         linkElement.href = pdfUrl;
-        document.getElementById('chatWindow').appendChild(linkElement).appendChild(pdfImage);
+        chatwindow.appendChild(linkElement).appendChild(pdfImage);
+        chatwindow.scrollTop =chatwindow.scrollHeight;
         document.getElementById('audioMessage').innerHTML = '';
-        stimulateBotPDFResponse();
+        var botMessage = stimulateBotPDFResponse();
+        chatwindow.appendChild(botMessage);
+        chatwindow.scrollTop = chatwindow.scrollHeight;
         };
 
         const pdfreader = new FileReader();
@@ -86,9 +90,12 @@ function handleFileUpload(event) {
         excelImage.src = "./static/excel_image.png"
         // excelImage.style = "width: 160px; height: 80px; margin-left:222.5px";
         excelImage.className ='excelImage'
-        document.getElementById('chatWindow').appendChild(linkElement).appendChild(excelImage);
+        chatwindow.appendChild(linkElement).appendChild(excelImage);
+        chatwindow.scrollTop = chatwindow.scrollHeight;
         document.getElementById('audioMessage').innerHTML = '';
-        stimulateBotPDFResponse();
+        var botMessage = stimulateBotPDFResponse();
+        chatwindow.appendChild(botMessage);
+        chatwindow.scrollTop = chatwindow.scrollHeight;
         };
 
         const excelReader = new FileReader();
@@ -116,5 +123,6 @@ function stimulateBotPDFResponse(){
     botMessage.className = 'botMessage';
     botMessage.innerText ="Success!!! \nYour File is uploaded.\nYou can now ask relevant question \
                            associated to the uploaded file.";
-    return document.getElementById('chatWindow').appendChild(botMessage);
+    return botMessage;
+    // return document.getElementById('chatWindow').appendChild(botMessage);
 } 
