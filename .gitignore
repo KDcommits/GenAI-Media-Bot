@@ -3,3 +3,6 @@
 /.ipynb_checkpoints
 /.env
 /model
+test.ipynb
+BG_IMG_3-assets
+templates/test.html
