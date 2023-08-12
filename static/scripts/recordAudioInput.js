@@ -30,7 +30,8 @@ function startRecording() {
       });
     })
     .catch(function (err) {
-      console.log('Error accessing microphone: ' + err);
+      alert('Error accessing microphone: ' + err)
+      //console.log('Error accessing microphone: ' + err);
     });
 }
 

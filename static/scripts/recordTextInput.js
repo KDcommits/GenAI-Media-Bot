@@ -1,12 +1,17 @@
 //function to display text message 
 function sendMessage() {
+    var startTime = new Date();
     const userInput = document.getElementById('textInput').value.trim();
     const userMessage = createUserMessage(userInput);
     const chatWindow = document.getElementById('chatWindow')
     chatWindow.appendChild(userMessage);
     chatWindow.scrollTop = chatWindow.scrollHeight;
     document.getElementById('textInput').value = '';
+    const waitMessage = displayPleaseWaitMessage(startTime);
+    chatWindow.appendChild(waitMessage);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
     if (userInput !== '') {
+      // Show please wait message 
         fetch('/text-question', {
             method: 'POST',
             headers: {
@@ -16,6 +21,10 @@ function sendMessage() {
           }).then(response => response.json())
           .then(responseData => {
         console.log("Response from backend:", responseData);
+        console.log(waitMessage);
+        // remove please wait message
+        displayPleaseWaitMessage(startTime);
+        waitMessage.classList.add('hidden');
 
         // Optionally, you can send the user's text message to your chatbot backend for processing
         // In this example, we'll simulate a response from the bot
@@ -33,7 +42,11 @@ function sendMessage() {
 function createUserMessage(message) {
     const userMessage = document.createElement('div');
     userMessage.className = 'userMessage';
-    userMessage.innerHTML ="<p style='text-align:right;'>" + message + "</p>";
+    var now = new Date();
+    var timeString = now.toLocaleTimeString("en-US", 
+                                                { timeZone: "Asia/Kolkata", hour12: false, 
+                                                  hour: "numeric",  minute: "numeric" });
+    userMessage.innerHTML ="<p style='text-align:right;'>" + "<span>"+message+"</span>" + "<span class='footnote';'>"+ " "+timeString+ "</span>"+"</p>";
     // console.log(message);
     // $.ajax({
     //     type: 'POST',
@@ -62,3 +75,22 @@ function handleKeyPress(event) {
     }
 }
 
+var isExecutionCompleted = true;
+function displayPleaseWaitMessage(startTime) {
+  const waitMessage  = document.createElement('div'); 
+  waitMessage.className = 'hidden';
+  if (isExecutionCompleted){
+    var timer = setInterval(function() {
+            var elapsedSeconds = Math.floor((new Date() - startTime) / 1000);
+            $('#timer').text(elapsedSeconds);
+            }, 1000);
+    waitMessage.classList.remove('hidden');
+    waitMessage.innerHTML = "<p align='center'>" + "Please Wait..."+"<span id='timer'>"+0+"</span>" + "</p>";
+  }
+  else {
+    waitMessage.classList.add('hidden');
+    waitMessage.innerHTML="";
+  }
+  isExecutionCompleted = !isExecutionCompleted;
+  return waitMessage;
+}
