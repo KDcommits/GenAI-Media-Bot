@@ -13,6 +13,18 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       }
+      .hidden {
+          display: none;
+      }
+
+      .footnote {
+      text-align: center;
+      font-size: 14px;
+      text-align:center;
+      margin-bottom:0px;
+      opacity: 0.7;
+      padding: 4px;
+    }
     </style>
   </head>
   <body>
@@ -24,6 +36,7 @@
     <div id="chatWindow"></div>
     <!-- <div class="shadow p-3 mb-5 bg-white rounded"> -->
     <!-- <input type="file" id="pdfFile" class="file-input" accept=".pdf"> -->
+    <!-- <div id="timestamp" style="font-size: 14px;;"></div> -->
     <input type="file" id="audioInput"  name="pdfFile" accept="audio/*,application/pdf,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
     <div class="audio-container" id="audioMessage"></div>
     <div id="buttonWindow">
@@ -41,7 +54,15 @@
     <script src="static/scripts/recordAudioInput.js"></script>
     <script src="static/scripts/recordTextInput.js"></script>
     <script src="static/scripts/uploadPDF.js"></script>
+    <!-- <script src="static/scripts/updateTimestamp.js"></script> -->
     <script>
+      var now = new Date();
+      var timeString = now.toLocaleTimeString("en-US", 
+                                                  { timeZone: "Asia/Kolkata", hour12: false, 
+                                                    hour: "numeric",  minute: "numeric" });
+      chatstart = document.createElement('div');
+      chatstart.innerHTML = "<p style='font-size: 16px;text-align:center;margin-bottom:10px';>"+"👋 "+timeString+" 👋"+"</p>";
+      document.getElementById('chatWindow').appendChild(chatstart);
 
       const initialMessages = [
         '👋Hello !!!🙂 \nI am Media-Bot at your service.',
