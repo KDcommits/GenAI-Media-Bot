@@ -25,7 +25,7 @@ class Model:
             page_content = re.sub('\s+', ' ', page_content)
             prompt += page_content +'\n\n'
         prompt += '''\nInstructions: Compose a comprehensive reply to the query asked by the user from the context provided.
-        Cite each reference using [pdfname.pdf , page : number] notation (every result has this number at the beginning and end).
+        Cite each reference using [page : number] notation (every result has this number at the beginning and end).
         Citation should be done at the end of each sentence. If the search results mention multiple subjects
         with the same name, create separate answers for each. Only include information found in the results and
         don't add any additional information. Make sure the answer is correct and don't output false content.
