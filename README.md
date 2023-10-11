@@ -22,11 +22,12 @@ B.  <i><strong>PDF-Level Query:</strong></i><br>
         - Let the LLM use it's power to generate the answer with the most human readable format.<br><br>
 
 <h3>Tech-stack:</h3>
-    I. Backend : Flask (Python)<br>
-    II. Frontend : HTML, CSS, Javascript, Bootstrap<br>
-    III. Database : MySQL<br>
-    IV. Vector DB : FAISS <br>
-    V. LLM : GPT-3.5-Turbo<br>
+    1. Backend : Flask (Python)<br>
+    2. Frontend : HTML, CSS, Javascript, Bootstrap<br>
+    3. Database : MySQL<br>
+    4. Vector DB : FAISS <br>
+    5. LLM : GPT-3.5-Turbo<br>
+    6. Transcription: Whisper<br>
 
 <h3>User Interface:</h3><br>
 
