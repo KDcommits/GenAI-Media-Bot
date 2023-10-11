@@ -21,7 +21,17 @@ B.  <i><strong>PDF-Level Query:</strong></i><br>
         - Pass the content of the top k chunk as the context of the GPT-3.5-Turbo Model of OpenAI.<br>
         - Let the LLM use it's power to generate the answer with the most human readable format.<br><br>
 
+<h3>Tech-stack:</h3>
+        I. Backend : Flask (Python)
+        II. Frontend : HTML, CSS, Javascript, Bootstrap
+        III. Database : MySQL
+        IV. Vector DB : FAISS 
+        V. LLM : GPT-3.5-Turbo
+
 <h3>User Interface:</h3><br>
 
 ![image](https://github.com/KDcommits/GenAI-Media-Bot/assets/124420761/f8a61c9a-7236-4c3b-81a9-de6cee4971f3)
 
+<h3>Future Scope:</h3>
+        1. Creation of a Vector DB to store PDF Knowledgebase info alongside volatile vector DB.
+        2. User and bot conversation in native lanuage of the user.
