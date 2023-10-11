@@ -8,9 +8,9 @@ Create a chatbot powered by Generative AI to:<br>
 
 <h3>Approach:</h3>
 1.  SQL-Level Query:<br>
-      - Set-up a connection with mysql database with mysql-connector.<br>
-      - Fetch the database schema information under consideration and pass it as the context of the LLM.<br>
-      - Use OpenAI's GPT-3.5-Turbo-0613 Model and leverage it's function calling attrbute to do the magic. <br>
+    - Set-up a connection with mysql database with mysql-connector.<br>
+    - Fetch the database schema information under consideration and pass it as the context of the LLM.<br>
+    - Use OpenAI's GPT-3.5-Turbo-0613 Model and leverage it's function calling attrbute to do the magic. <br>
 
       
 ![image](https://github.com/KDcommits/GenAI-Media-Bot/assets/124420761/f8a61c9a-7236-4c3b-81a9-de6cee4971f3)
