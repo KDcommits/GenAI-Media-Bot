@@ -22,5 +22,6 @@ B.  <i><strong>PDF-Level Query:</strong></i><br>
         - Let the LLM use it's power to generate the answer with the most human readable format.<br><br>
 
 <h3>User Interface:</h3><br>
+
 ![image](https://github.com/KDcommits/GenAI-Media-Bot/assets/124420761/f8a61c9a-7236-4c3b-81a9-de6cee4971f3)
 
