@@ -41,13 +41,24 @@ sql_query_obj = SQLQuerywithFunctionCalling()
 
 @app.route('/', methods=['GET','POST'])
 @app.route('/home',methods=['GET','POST'])
-def audioTranscripter():
-
+def clearTempFiles():
+    '''
+        With each refresh of the webpage it will delete the previously created vectot database
+        and audio transcript.
+    '''
+    ## Deletion of downloaded pdf
+    if len(os.listdir(app.config["INPUT_PDF_FOLDER"] ))>0:
+        for uploaded_filename in os.listdir(app.config["INPUT_PDF_FOLDER"]):
+            uploaded_file = os.path.join(app.config["INPUT_PDF_FOLDER"],uploaded_filename)
+            os.remove(uploaded_file)
+            
+    ## Deletion of vector db storage
     if len(os.listdir(app.config["VECTOR_DB_FOLDER"]))>0:
         for vector_filename in os.listdir(app.config["VECTOR_DB_FOLDER"]):
             vector_file = os.path.join(app.config["VECTOR_DB_FOLDER"],vector_filename)
             os.remove(vector_file)
 
+    ## Deletion of audio transcript
     if len(os.listdir(app.config['TRANSCRIPTED_AUDIO_FOLDER']))>0:
         for transcript_filename in os.listdir(app.config['TRANSCRIPTED_AUDIO_FOLDER']):
             transcription = os.path.join(app.config['TRANSCRIPTED_AUDIO_FOLDER'],transcript_filename)
@@ -58,24 +69,21 @@ def audioTranscripter():
 @app.route('/result', methods=['GET','POST'])
 def result():
     if request.method == "POST":
-        if 'data' in request.files:
-            # input_audio_file = 'recorded_audio.wav'
-            # os.remove(os.path.join(os.path.join(app.config['INPUT_AUDIO'],input_audio_file)))
-            file = request.files['data']
+        if 'audioData' in request.files:
+            file = request.files['audioData']
             filepath = os.path.join(app.config["UPLOAD_AUDIO_FOLDER"] , 'recorded_audio.wav')
             file.save(filepath)
             speech2Text(app.config["INPUT_AUDIO_FOLDER"] , app.config['TRANSCRIPTED_AUDIO_FOLDER'])
             if len(os.listdir(app.config['TRANSCRIPTED_AUDIO_FOLDER']))>0:
                 return jsonify("Input Audio is stored")
         
-
         if 'pdfFile' in request.files:
-            pdf_filename = 'downloaded_pdf.pdf'
             file = request.files['pdfFile']
-            print(file.filename)
-            filepath = os.path.join(app.config["UPLOAD_PDF_FOLDER"], pdf_filename)
+            print("files:", request.files)
+            filepath = os.path.join(app.config["UPLOAD_PDF_FOLDER"], file.filename)
             file.save(filepath)
             data_obj.createPDFVectorDBwithFAISS(chunk_size=2000, chunk_overlap=500)
+            ## To counterbalance the time taken for the vector db creation
             if len(os.listdir(app.config["VECTOR_DB_FOLDER"]))>0:
                 return jsonify("Input PDF is stored")
         
@@ -155,7 +163,7 @@ def fetchAudioQuestion():
             os.remove(os.path.join(app.config['TRANSCRIPTED_AUDIO_FOLDER'], transcripted_audio_file))
             # pdf_valid_response = response_pdf.lower().__contains__("found nothing") | response_pdf.lower().__contains__("sorry") 
             # sql_valid_response = response_sql.lower().__contains__("found nothing") | response_sql.lower().__contains__("sorry") 
-            return jsonify(response_sql),200
+            return jsonify({'audio_transcript':input_question,'response_sql':response_sql}),200
 
     else:
         time.sleep(0.5)
