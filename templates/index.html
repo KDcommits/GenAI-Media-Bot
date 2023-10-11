@@ -28,16 +28,11 @@
     </style>
   </head>
   <body>
+    <!-- <iframe href="/templates/sql_pdf_toggle.html" width="50%" height="100"></iframe> -->
     <div class="chatbot" id="chatbotWindow">
-    <!-- <div class="nameWindow"> -->
       <div class="chatbot-header" onclick="toggleChatbot()">Media-Bot</div>
-    <!-- <h2 align="center" class="chatbot-header" onclick="toggleChatbot()" >MediaBot</h2> -->
-  <!-- </div> -->
     <div id="chatWindow"></div>
-    <!-- <div class="shadow p-3 mb-5 bg-white rounded"> -->
-    <!-- <input type="file" id="pdfFile" class="file-input" accept=".pdf"> -->
-    <!-- <div id="timestamp" style="font-size: 14px;;"></div> -->
-    <input type="file" id="audioInput"  name="pdfFile" accept="audio/*,application/pdf,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+    <input type="file" id="audioInput"  name="pdfFile[]" accept="audio/*,application/pdf,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" multiple />
     <div class="audio-container" id="audioMessage"></div>
     <div id="buttonWindow">
     <button onclick="uploadFile()" id="uploadPDF" class="pdfUploadButton"><i class="fas fa-paperclip"></i></button>
@@ -45,7 +40,6 @@
     <button onclick="sendMessage()" id="sendText" class="sendTextButton"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
     <button onclick="toggleRecording()" id="audioRecordButton" class="startStopButton" ><i class="fa fa-microphone" aria-hidden="true"></i></button>
     </div>
-  <!-- </div> -->
   </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -67,7 +61,7 @@
       const initialMessages = [
         '👋Hello !!!🙂 \nI am Media-Bot at your service.',
         ' Follow the steps to get started: \n\
-        🔸Upload a pdf or an excel file using the attachment icon.\n\
+        🔸Upload a pdf file using the attachment icon (and/or)\n\
         🔸Type text /record audio to ask question from the uploaded file.',
       ];
 
@@ -79,69 +73,7 @@
       });
 
       // Event listener to handle file upload
-      document.getElementById('audioInput').addEventListener('change', handleFileUpload);
-//       function uploadFile() {
-//     document.getElementById('audioInput').click();
-//   }
-
-// // Function to handle file upload
-// function handleFileUpload(event) {
-//     const file = event.target.files[0];
-//     if (file && file.type === 'application/pdf') {
-//         const reader = new FileReader();
-//         reader.onload = function () {
-//         const pdfUrl = reader.result;
-
-//         // Create a link element and append it to the chat window
-//         const linkElement = document.createElement('a');
-//         linkElement.href = pdfUrl;
-//         linkElement.textContent = 'Uploaded PDF';
-//         linkElement.target = '_blank';
-//         document.getElementById('chatWindow').appendChild(linkElement);
-
-//         // Clear the file message
-//         document.getElementById('audioMessage').innerHTML = '';
-
-//         // Optionally, you can send the file to your chatbot backend for processing
-//         // In this example, we'll simulate a response from the bot
-//         stimulateBotPDFResponse();
-//         };
-//         reader.readAsDataURL(file);
-//     }
-//     }
-
-// function stimulateBotPDFResponse(){
-//     const botMessage = document.createElement('div');
-//     botMessage.className = 'botMessage';
-//     botMessage.innerText ="OpenAI Response";
-//     return document.getElementById('chatWindow').appendChild(botMessage);
-
-// }
- 
-      // // Function to create a bot message
-      // function createBotMessage(message) {
-      //   const botMessage = document.createElement('div');
-      //   botMessage.className = 'botMessage';
-      //   botMessage.innerText = message;
-      //   return botMessage;
-      // }
-
-//       // Function to create an audio message
-//       function createAudioMessage(audioUrl) {
-//         const audioMessage = document.createElement('div');
-//         audioMessage.className = 'audioMessage';
-//         const audioElement = document.createElement('audio');
-//         audioElement.src = audioUrl;
-//         audioElement.controls = true;
-//         audioMessage.appendChild(audioElement);
-//         return audioMessage;
-//       }
-
-      // // Function to display a message in the chat window
-      // function displayMessage(messageElement) {
-      //   document.getElementById('chatWindow').appendChild(messageElement);
-      // }
-      
+      document.getElementById('audioInput').addEventListener('change', handleFileUpload);      
     </script>
   </body>
 </html>

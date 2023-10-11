@@ -85,7 +85,8 @@ function displayPleaseWaitMessage(startTime) {
             $('#timer').text(elapsedSeconds);
             }, 1000);
     waitMessage.classList.remove('hidden');
-    waitMessage.innerHTML = "<p align='center'>" + "Please Wait..."+"<span id='timer'>"+0+"</span>" + "</p>";
+    // waitMessage.innerHTML = "<p align='center'>" + "Please Wait..."+"<span id='timer'>"+0+"</span>" + "</p>";
+    waitMessage.innerHTML = "<p align='center'>" + "Please Wait..."+ "</p>";
   }
   else {
     waitMessage.classList.add('hidden');
