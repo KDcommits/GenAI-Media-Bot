@@ -42,7 +42,7 @@ function stopRecording() {
     const audioBlob = new Blob(recordedChunks, { 'type': 'audio/wav; codecs=MS_PCM' });
     const audioUrl = URL.createObjectURL(audioBlob);
     let formData = new FormData();
-    formData.append('data', audioBlob, "data.wav");
+    formData.append('audioData', audioBlob, "data.wav");
     $.ajax({
         type: 'POST',
         url: '/result',
@@ -57,7 +57,6 @@ function stopRecording() {
     audioElement.controls = true;
     document.getElementById('chatWindow').appendChild(audioElement);
     document.getElementById('audioMessage').innerHTML = '';
-
     // Optionally, you can send the audioBlob to your chatbot backend for processing
     // In this example, we'll simulate a response from the bot
     displayResponse();
@@ -85,9 +84,25 @@ function displayResponse() {
   .then(response => response.json())
   .then(responseData => {
     console.log("Response from backend:", responseData);
-    stimulateBotAudioResponse(responseData);
+    const userMessage = createUserMessage(responseData['audio_transcript']);
+    chatWindow.appendChild(userMessage);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    document.getElementById('textInput').value = '';
+    stimulateBotAudioResponse(responseData['response_sql']);
   })
   .catch(error => {
     console.error("Error:", error);
   });
+}
+
+
+function createUserMessage(message) {
+  const userMessage = document.createElement('div');
+  userMessage.className = 'userMessage';
+  var now = new Date();
+  var timeString = now.toLocaleTimeString("en-US", 
+                                              { timeZone: "Asia/Kolkata", hour12: false, 
+                                                hour: "numeric",  minute: "numeric" });
+  userMessage.innerHTML ="<p style='text-align:right;'>" + "<span>"+message+"</span>" + "<span class='footnote';'>"+ " "+timeString+ "</span>"+"</p>";
+  return userMessage;
 }
