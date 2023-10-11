@@ -7,12 +7,12 @@ Create a chatbot powered by Generative AI to:<br>
   3. Must support textual and audio-based questions. <br>
 
 <h3>Approach:</h3>
-A.  SQL-Level Query:<br>
+A.  <i>SQL-Level Query:</i><br>
     - Set-up a connection with mysql database with mysql-connector.<br>
     - Fetch the database schema information under consideration and pass it as the context of the LLM.<br>
     - Use OpenAI's GPT-3.5-Turbo-0613 Model and leverage it's function calling attrbute to write the SQL query. <br>
     - Use the SQL query to derive the result from the database.<br><br>
-B.  PDF-Level Query:<br>
+B.  <i>PDF-Level Query:</i><br>
     - Temporarily store the pdf uploaded by the user untill the page gets refreshed.<br>
     - Extract text out of the pdf and create overlapping text chunks of desirable lengths.<br>
     - Use an embedding model to create vector embeddings of those chunks.<br>
