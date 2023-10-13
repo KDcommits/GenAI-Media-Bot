@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Bootstrap CSS (You may need to update the path) -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for the toggle button */
+        .toggle-button {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .toggle-button input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cf2e2e;
+            transition: .4s;
+            border-radius: 50px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 40px;
+            transition: .4s;
+        }
+        input:checked + .slider {
+            background-color: #007BFF; /* Toggle ON color */
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <label class="switch toggle-button">
+            <input type="checkbox" id="toggleSwitch">
+            <span class="slider"></span>
+        </label>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div id="sqlDisplay">Off</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function updateDisplay() {
+            const toggleSwitch = document.getElementById("toggleSwitch");
+            const sqlDisplay = document.getElementById("sqlDisplay");
+
+            if (toggleSwitch.checked) {
+                sqlDisplay.innerText = "SQL";
+            } else {
+                sqlDisplay.innerText = "PDF";
+            }
+        }
+
+        document.getElementById("toggleSwitch").addEventListener("change", updateDisplay);
+        updateDisplay();
+    </script>
+</body>
+</html>
