@@ -9,7 +9,7 @@ import datetime
 import pandas as pd
 from dotenv import load_dotenv
 from transcript import speech2Text
-from data_final import Data
+from data import Data
 from model_final import Model
 # from excelAI import ExcelQuery
 from flask import Flask,request, jsonify, render_template
